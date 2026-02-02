@@ -12,6 +12,7 @@ import logging
 import multiprocessing as mp
 import os
 import socket
+import time
 from typing import Any, List
 
 from sglang_omni import Coordinator
@@ -223,7 +224,7 @@ async def run_coordinator_main(relay_type: str):
         # (10 * 2) + 100 = 120
         expected = 120
         result = await coordinator.submit("req-001", input_value)
-        assert result == expected
+        assert result["value"] == expected
         logger.info(f"Test 1 PASSED: Input {input_value} -> Output {result}")
 
         # Test 2: Multiple sequential requests
@@ -232,7 +233,7 @@ async def run_coordinator_main(relay_type: str):
             input_val = (i + 1) * 5
             expected = (input_val * 2) + 100
             result = await coordinator.submit(f"req-multi-{i}", input_val)
-            assert result == expected
+            assert result["value"] == expected
         logger.info("Test 2 PASSED!")
 
         # Test 3: Abort
